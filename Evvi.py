@@ -19,5 +19,7 @@ async def on_message(message):
 
   if message.content.startswith('-hello'):
     await message.channel.send('Hello!')
+  else if message.content.startswith('-h'):
+    await message.channel.send('Hello!')
     
 client.run(my_secret)
