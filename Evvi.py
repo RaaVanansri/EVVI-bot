@@ -31,4 +31,13 @@ async def on_message(message):
     quote1 = get_quote()
     await message.channel.send(quote1)
 
+@client.event
+async def on_message(message):
+  if "otha" in message.content:
+    #user = message.content.get.user()
+          #print("Something")
+          #or
+    await message.channel.send("Aabasam thaveerpom friends")
+    await client.process_commands(message)
+
 client.run(my_secret)
