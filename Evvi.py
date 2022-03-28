@@ -22,22 +22,37 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+
+  aabasam = ['otha','gomma','punda','thevadeya','sunni','junni','thayoli','koothi']
+  
   if message.author == client.user:
     return
 
   if message.content.startswith('/hello'):
     await message.channel.send('Hello!')
+    
   if message.content.startswith('/quote'):
     quote1 = get_quote()
     await message.channel.send(quote1)
 
-@client.event
-async def on_message(message):
-  if "otha" in message.content:
-    #user = message.content.get.user()
-          #print("Something")
-          #or
-    await message.channel.send("Aabasam thaveerpom friends")
-    await client.process_commands(message)
+  for x in aabasam:
+    if x in message.content:
+      #user = message.content.get.user()
+            #print("Something")
+            #or
+      await message.channel.send(f"Aabasam thaveerpom friends,  <@{message.author.id}>")
+      await client.process_commands(message)
+
+  if message.content.startswith('/filth'):
+    if message.author.id == 861169200968892417:
+      await message.channel.send(f'Hey <@{929079385737281586}>, <@{861169200968892417}> asking for hugs')
+    else:
+      await message.channel.send('Sorry fella, only raavanan can use this command')
+
+  if message.content.startswith('/raavanan'):
+    if message.author.id == 929079385737281586:
+      await message.channel.send(f'Hey <@{861169200968892417}>, your gorl <@{929079385737281586}> asking for hugs you slug')
+    else:
+      await message.channel.send('Sorry fella, only filth can use this command')
 
 client.run(my_secret)
