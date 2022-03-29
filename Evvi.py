@@ -3,6 +3,7 @@ import discord
 import requests
 import json
 import pymongo
+from discord.ext import commands, tasks
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -16,16 +17,6 @@ db = pymongo.MongoClient("mongodb://raavanan:Sr1kutty77@cluster0-shard-00-00.z89
 
 vardb = db["Channel"]
 c_id = vardb["channel_id"]
-bcid = {"bumpcid":0}
-
-x = c_id.insert_one(bcid)
-
-print(bcid)
-
-def bumpchannel(cid):
-  bcid_update = {"bumpcid":cid}
-  x = c_id.update_one(bcid,bcid_update)
-
 
 def get_quote():
   response = requests.get('https://zenquotes.io/api/random')
@@ -33,15 +24,33 @@ def get_quote():
   quote = json_data[0]['q'] + " -" + json_data[0]['a']
   return(quote)
 
+@tasks.loop(hours=2.0) 
+async def send_bump():
+  channel = c_id.find({})#,{'_id':0},{'bumpcid':1})
+  #print(channel[0]['bumpcid'])
+  for each in channel:#print(each["bumpcid"])
+    bchannel = client.get_channel(each["bumpcid"])
+  #await bchannel.send("!d bump")
+
 @client.event
 async def on_ready():
   print('Reporting Duty {0.user}'.format(client))
+  send_bump.start()
 
 @client.event
 async def on_message(message):
 
   aabasam = ['otha','gomma','punda','thevadeya','sunni','junni','thayoli','koothi']
   
+  for x in aabasam:
+    if x in message.content:
+      #user = message.content.get.user()
+            #print("Something")
+            #or
+      await message.channel.send(f"Aabasam thaveerpom friends,  <@{message.author.id}>")
+      await message.delete()
+      #await client.process_commands(message)
+
   if message.author == client.user:
     return
 
@@ -51,15 +60,6 @@ async def on_message(message):
   if message.content.startswith('/quote'):
     quote1 = get_quote()
     await message.channel.send(quote1)
-
-  for x in aabasam:
-    if x in message.content:
-      #user = message.content.get.user()
-            #print("Something")
-            #or
-      await message.channel.send(f"Aabasam thaveerpom friends,  <@{message.author.id}>")
-      await message.delete()
-      await client.process_commands(message)
 
   if message.content.startswith('/filth'):
     if message.author.id == el:
@@ -76,6 +76,6 @@ async def on_message(message):
   if message.content.startswith('/set auto bump'): 
     b1cid = {"bumpcid": message.channel.id}
     x = c_id.update_one({'_id': '624288e2c9fced7e94938ae4'},{"$set": {"bumpcid":message.channel.id}}, upsert=True)
-
+    await message.channel.send(f"Done. <#{message.channel.id}> channel is set for auto bump")
 
 client.run(evvi)
