@@ -24,18 +24,18 @@ def get_quote():
   quote = json_data[0]['q'] + " -" + json_data[0]['a']
   return(quote)
 
-@tasks.loop(hours=2.0) 
-async def send_bump():
-  channel = c_id.find({})#,{'_id':0},{'bumpcid':1})
+#@tasks.loop(hours=2.0) 
+#async def send_bump():
+  #channel = c_id.find({})#,{'_id':0},{'bumpcid':1})
   #print(channel[0]['bumpcid'])
-  for each in channel:#print(each["bumpcid"])
-    bchannel = client.get_channel(each["bumpcid"])
+  #for each in channel:#print(each["bumpcid"])
+    #bchannel = client.get_channel(each["bumpcid"])
   #await bchannel.send("!d bump")
 
 @client.event
 async def on_ready():
   print('Reporting Duty {0.user}'.format(client))
-  send_bump.start()
+  #send_bump.start()
 
 @client.event
 async def on_message(message):
@@ -73,9 +73,25 @@ async def on_message(message):
     else:
       await message.channel.send('Sorry fella, only filth can use this command')
 
-  if message.content.startswith('/set auto bump'): 
-    b1cid = {"bumpcid": message.channel.id}
-    x = c_id.update_one({'_id': '624288e2c9fced7e94938ae4'},{"$set": {"bumpcid":message.channel.id}}, upsert=True)
-    await message.channel.send(f"Done. <#{message.channel.id}> channel is set for auto bump")
+  if message.content.startswith('/set cbox'): 
+    b1cid = {"cbox": message.channel.id}
+    x = c_id.update_one({'_id': 'complaint_box'},{"$set": {"cbox":message.channel.id}}, upsert=True)
+    await message.channel.send(f"Done. <#{message.channel.id}> channel is set for Complaint")
+
+  if message.content.startswith('/set box'): 
+    x = c_id.update_one({'_id': 'box'},{"$set": {"box":message.channel.id}}, upsert=True)
+    await message.channel.send(f"Done. <#{message.channel.id}> channel is set for receiving complaints")
+
+  if message.content.startswith('/complaint'):
+    complaint_txt = message.content[11:]
+    cbchannel = c_id.find({})
+    cboxchannel = client.get_channel(cbchannel[0]['cbox'])
+    boxchannel = client.get_channel(cbchannel[1]['box'])
+    if cboxchannel.id == message.channel.id:
+      await boxchannel.send(complaint_txt)
+      await message.delete()
+    else:
+      await message.channel.send(f'Please send your complaint in <#{cboxchannel.id}>')
+      await message.delete()
 
 client.run(evvi)
