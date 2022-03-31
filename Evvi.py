@@ -3,6 +3,7 @@ import discord
 import requests
 import json
 import pymongo
+from unique_id import get_unique_id
 from discord.ext import commands, tasks
 from dotenv import load_dotenv
 load_dotenv()
@@ -83,12 +84,13 @@ async def on_message(message):
     await message.channel.send(f"Done. <#{message.channel.id}> channel is set for receiving complaints")
 
   if message.content.startswith('/complaint'):
+    ticket_id = get_unique_id(length=6)
     complaint_txt = message.content[11:]
     cbchannel = c_id.find({})
     cboxchannel = client.get_channel(cbchannel[0]['cbox'])
     boxchannel = client.get_channel(cbchannel[1]['box'])
     if cboxchannel.id == message.channel.id:
-      await boxchannel.send(complaint_txt)
+      await boxchannel.send(f'Ticket number:{ticket_id} \n Complaint raised by <@{message.author.id}> \n {complaint_txt}')
       await message.delete()
     else:
       await message.channel.send(f'Please send your complaint in <#{cboxchannel.id}>')
