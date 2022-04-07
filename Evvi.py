@@ -1,3 +1,4 @@
+from dis import disco
 import json
 import discord
 import os
@@ -40,6 +41,7 @@ hel ="""
 vardb = db["Channel"]
 c_id = vardb["channel_id"]
 badword = vardb["badword"]
+roleid = vardb["role_id"]
 
 @bot.event
 async def on_message(message):
@@ -50,6 +52,16 @@ async def on_message(message):
     if x in message.content.lower():
       await message.delete()
       await message.channel.send(f"Aabasam thaveerpom friends,  <@{message.author.id}>", delete_after=7.0)
+
+  if message.author.id == 302050872383242240 :
+    
+    cbchannel = c_id.find({})
+    bumpc = roleid.find({})
+    bumpchannel = bot.get_channel(cbchannel[2]['bumpreminder'])
+    if message.channel.id == bumpchannel.id:
+      bumpro = bumpc[0]['bumprole']
+      await bumpchannel.send(f'It\'s Bump time bois and gorls {bumpro}')
+
   await bot.process_commands(message)
 
 @bot.command()
@@ -81,6 +93,13 @@ async def quote(ctx):
 async def setbox(ctx):
   x = c_id.update_one({'_id': 'box'},{"$set": {"box":ctx.channel.id}}, upsert=True)
   await ctx.send(f"Done. <#{ctx.channel.id}> channel is set for receiving complaints")
+
+@bot.command()
+async def setbump(ctx):
+  bumprole = ctx.message.content[9:]
+  roleid.update_one({'_id': 'bumprole'},{"$set": {"bumprole":bumprole}}, upsert=True)
+  x = c_id.update_one({'_id': 'bumpremc'},{"$set": {"bumpreminder":ctx.channel.id}}, upsert=True)
+  await ctx.send(f"Done. <#{ctx.channel.id}> channel is set for bump remainder")
 
 @bot.command()
 async def helps(ctx):
