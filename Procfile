@@ -1,1 +1,1 @@
-worker: python evvi.py
+worker: python Evvi.py
