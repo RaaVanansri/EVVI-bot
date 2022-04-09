@@ -1,11 +1,10 @@
-from dis import disco
 import json
-import discord
 import os
-from pydoc import cli
+from aiohttp import payload_type
 import requests
-from discord import Intents
 import pymongo
+import discord
+from setuptools import Command
 from unique_id import get_unique_id
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -14,7 +13,11 @@ import music
 cogs = [music]
 
 load_dotenv()
-bot = commands.Bot(command_prefix="/")
+bot = commands.Bot(command_prefix="!")
+
+# currencycon_data = {'format':'json', 'api_key':'[YOUR_API_KEY]','from':'USD','to':'EUR','amount':'120'}
+# response = requests.post('https://api.iban.com/clients/api/currency/convert/',currencycon_data)
+# print(response.text)
 
 evvi = os.getenv('TOKEN')
 ella = os.getenv('mine')
@@ -28,13 +31,13 @@ for i in range(len(cogs)):
 
 hel ="""
 ```
-/hello: greetings
-/quote: fetch some quotes for you
-/complaint: to raise your complaint to admins
-/playit<song name or link>: play songs in vc
-/pause: pause the current song
-/resume: resume the current song
-/disconnect: disconnect from the vc
+!hello: greetings
+!quote: fetch some quotes for you
+!complaint: to raise your complaint to admins
+!play or !p <song name or link>: play songs in vc
+!pause or !pa: pause the current song
+!resume or !res: resume the current song
+!disconnect or !dc: disconnect from the vc
 ```
 """
 
@@ -45,23 +48,18 @@ roleid = vardb["role_id"]
 
 @bot.event
 async def on_message(message):
-
   aabasam = ['otha','gomma','punda','thevadeya','sunni','junni','thayoli','koothi','fuck','bitch','brats','bastard']
-  
   for x in aabasam:
     if x in message.content.lower():
       await message.delete()
       await message.channel.send(f"Aabasam thaveerpom friends,  <@{message.author.id}>", delete_after=7.0)
-
-  if message.author.id == 302050872383242240 :
-    
-    cbchannel = c_id.find({})
-    bumpc = roleid.find({})
-    bumpchannel = bot.get_channel(cbchannel[2]['bumpreminder'])
-    if message.channel.id == bumpchannel.id:
-      bumpro = bumpc[0]['bumprole']
-      await bumpchannel.send(f'It\'s Bump time bois and gorls {bumpro}')
-
+  # if message.author.id == 302050872383242240 :
+  #   cbchannel = c_id.find({})
+  #   bumpc = roleid.find({})
+  #   bumpchannel = bot.get_channel(cbchannel[2]['bumpreminder'])
+  #   if message.channel.id == bumpchannel.id:
+  #     bumpro = bumpc[0]['bumprole']
+  #     await bumpchannel.send(f'It\'s Bump time bois and gorls {bumpro}')
   await bot.process_commands(message)
 
 @bot.command()
@@ -91,7 +89,7 @@ async def quote(ctx):
 
 @bot.command()
 async def setbox(ctx):
-  x = c_id.update_one({'_id': 'box'},{"$set": {"box":ctx.channel.id}}, upsert=True)
+  x = c_id.update_one({'_id': ctx.channel.name},{"$set": {"box":ctx.channel.id}}, upsert=True)
   await ctx.send(f"Done. <#{ctx.channel.id}> channel is set for receiving complaints")
 
 @bot.command()
@@ -112,16 +110,41 @@ async def setcbox(ctx):
 
 @bot.command()
 async def filth(ctx):
-  if ctx.author.id == int(el):
+  if ctx.author.id == el:
     await ctx.send(f'Hey <@{ella}>, <@{el}> asking for hugs')
   else:
     await ctx.send('Sorry fella, only raavanan can use this command')
   
 @bot.command()
 async def raavanan(ctx):
-  if ctx.author.id == int(ella):
+  if ctx.author.id == ella:
     await ctx.send(f'Hey <@{el}>, <@{ella}> asking for hugs')
   else:
     await ctx.send('Sorry fella, only filth can use this command')
 
+@bot.command()
+async def setverify(ctx):
+  #if vyoxchannel is None:
+  msg = await ctx.send('React to verify')
+  print(msg.id)
+  await msg.add_reaction('✅')
+  c_id.update_one({'_id': "verify"},{"$set": {"ver":ctx.channel.id,"vermsgid":msg.id}}, upsert=True)
+  ctx.delete()
+  
+@bot.event
+async def on_raw_reaction_add(ctx):
+  vychannel = c_id.find({})
+  msgid = vychannel[3]['vermsgid']
+  vyoxchannel = bot.get_channel(vychannel[3]['ver'])
+  if msgid == ctx.message_id:
+    member = ctx.member
+    guild = member.guild
+    emoji = ctx.emoji.name
+    if emoji == '✅':
+      role = discord.utils.get(guild.roles, name="Makkal")
+    await member.add_roles(role)
+  
+    await bot.process_commands(ctx)
+
+  
 bot.run(evvi)
