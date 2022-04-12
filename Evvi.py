@@ -22,8 +22,9 @@ bot = commands.Bot(command_prefix="!")
 evvi = os.getenv('TOKEN')
 ella = os.getenv('mine')
 el = os.getenv('me')
-db = pymongo.MongoClient('mongodb://raavanan:Sr1kutty77@cluster0-shard-00-00.z89ji.mongodb.net:27017,cluster0-shard-00-01.z89ji.mongodb.net:27017,cluster0-shard-00-02.z89ji.mongodb.net:27017/Channel?ssl=true&replicaSet=atlas-5yhivq-shard-0&authSource=admin&retryWrites=true&w=majority')
-
+connectionstring = os.getenv('DBCONSTR')
+db = pymongo.MongoClient(connectionstring)
+print(db)
 #client = discord.Client()
 
 for i in range(len(cogs)):
@@ -130,6 +131,10 @@ async def setverify(ctx):
   await msg.add_reaction('✅')
   c_id.update_one({'_id': "verify"},{"$set": {"ver":ctx.channel.id,"vermsgid":msg.id}}, upsert=True)
   ctx.delete()
+
+@bot.command()
+async def kata(ctx,diff,lan):
+  return
   
 @bot.event
 async def on_raw_reaction_add(ctx):
