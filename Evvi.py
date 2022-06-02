@@ -121,7 +121,7 @@ async def filth(ctx):
 @bot.command()
 async def raavanan(ctx):
   if ctx.author.id == int(ella):
-    await ctx.send(f'Hey <@{el}>, <@{ella}> asking for hugs')
+    await ctx.send(f'Hey <@{el}>, your gorl <@{ella}> asking for hugs you slug')
   else:
     await ctx.send('Sorry fella, only filth can use this command')
 
