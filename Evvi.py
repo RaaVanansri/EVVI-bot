@@ -32,13 +32,13 @@ for i in range(len(cogs)):
 
 hel ="""
 ```
-!hello: greetings
-!quote: fetch some quotes for you
-!complaint: to raise your complaint to admins
-!play or !p <song name or link>: play songs in vc
-!pause or !pa: pause the current song
-!resume or !res: resume the current song
-!disconnect or !dc: disconnect from the vc
+!hello                          : greetings
+!quote                          : fetch some quotes for you
+!complaint                      : to raise your complaint
+!play or !p <song name or link> : play songs in vc
+!pause or !pa                   : pause the current song
+!resume or !res                 : resume the current song
+!disconnect or !dc              : disconnect from the vc
 ```
 """
 
@@ -46,6 +46,8 @@ vardb = db["Channel"]
 c_id = vardb["channel_id"]
 badword = vardb["badword"]
 roleid = vardb["role_id"]
+
+bot.remove_command('help')
 
 @bot.event
 async def on_message(message):
@@ -101,7 +103,7 @@ async def setbump(ctx):
   await ctx.send(f"Done. <#{ctx.channel.id}> channel is set for bump remainder")
 
 @bot.command()
-async def helps(ctx):
+async def help(ctx):
   await ctx.send(f'{hel}')
   
 @bot.command()
@@ -111,14 +113,14 @@ async def setcbox(ctx):
 
 @bot.command()
 async def filth(ctx):
-  if ctx.author.id == el:
+  if ctx.author.id == int(el):
     await ctx.send(f'Hey <@{ella}>, <@{el}> asking for hugs')
   else:
     await ctx.send('Sorry fella, only raavanan can use this command')
   
 @bot.command()
 async def raavanan(ctx):
-  if ctx.author.id == ella:
+  if ctx.author.id == int(ella):
     await ctx.send(f'Hey <@{el}>, <@{ella}> asking for hugs')
   else:
     await ctx.send('Sorry fella, only filth can use this command')
@@ -148,6 +150,7 @@ async def on_raw_reaction_add(ctx):
     if emoji == '✅':
       role = discord.utils.get(guild.roles, name="Makkal")
     await member.add_roles(role)
+    await ctx.remove_reaction('✅',ctx.message.author)
   
     await bot.process_commands(ctx)
 
