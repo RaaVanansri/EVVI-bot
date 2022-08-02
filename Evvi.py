@@ -51,7 +51,7 @@ bot.remove_command('help')
 
 @bot.event
 async def on_message(message):
-  aabasam = ['otha','gomma','punda','thevadeya','sunni','junni','thayoli','koothi','fuck','bitch','brats','bastard']
+  aabasam = ['fuck','bitch','brats','bastard']
   for x in aabasam:
     if x in message.content.lower():
       await message.delete()
