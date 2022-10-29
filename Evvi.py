@@ -1,5 +1,6 @@
 import json
 import os
+from random import randint
 from aiohttp import payload_type
 import requests
 import pymongo
@@ -35,6 +36,7 @@ hel ="""
 !hello                          : greetings
 !quote                          : fetch some quotes for you
 !complaint                      : to raise your complaint
+!q                              : Ask questions and get reply (not like chat but pretty much 8 Ball)
 !play or !p <song name or link> : play songs in vc
 !pause or !pa                   : pause the current song
 !resume or !res                 : resume the current song
@@ -64,6 +66,11 @@ async def on_message(message):
   #     bumpro = bumpc[0]['bumprole']
   #     await bumpchannel.send(f'It\'s Bump time bois and gorls {bumpro}')
   await bot.process_commands(message)
+
+@bot.command()
+async def q(ctx):
+  replies_of_q = ['It is certain','Without a doubt','You may rely on it','Yes definitely','It is decidedly so','As I see it, yes','Most likely','Yes','Outlook good','Signs point to y','Reply hazy try again','Better not tell you now','Ask again later','Cannot predict now','Concentrate and ask again','Don\'t count on it','Outlook not so good','My sources say no','Very doubtful','My reply is no']
+  await ctx.reply(replies_of_q[randint(0,19)])
 
 @bot.command()
 async def hello(ctx):
