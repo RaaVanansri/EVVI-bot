@@ -37,6 +37,7 @@ hel ="""
 !quote                          : fetch some quotes for you
 !complaint                      : to raise your complaint
 !q                              : Ask questions and get reply (not like chat but pretty much 8 Ball)
+!htd                            : Converts Hexa decimal to Decimal
 !play or !p <song name or link> : play songs in vc
 !pause or !pa                   : pause the current song
 !resume or !res                 : resume the current song
@@ -133,6 +134,21 @@ async def raavanan(ctx):
     await ctx.send('Sorry fella, only filth can use this command')
 
 @bot.command()
+async def htd(ctx):
+  n = ctx.message.content[5:]
+  x = int(len(n)-1) #3
+  def hex_to_deci(x,n):
+    hexdictsmall = {'0':0,'1':1,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'a':10,'b':11,'c':12,'d':13,'e':14,'f':15}
+    dec = 0
+    for i in n:#'1100'
+        i = i.lower()
+        i = hexdictsmall.get(i)
+        if x > -1:
+                dec += int(i) * 16**x
+                x -= 1
+    return dec
+  await ctx.send(hex_to_deci(x,n))
+@bot.command()
 async def setverify(ctx):
   #if vyoxchannel is None:
   msg = await ctx.send('React to verify')
@@ -143,8 +159,8 @@ async def setverify(ctx):
 
 @bot.command()
 async def kata(ctx,diff,lan):
-  return
-  
+  return 0
+
 @bot.event
 async def on_raw_reaction_add(ctx):
   vychannel = c_id.find({})
